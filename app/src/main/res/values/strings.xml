@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">PicsMe</string>
+
+    <string name="filter_original">Original</string>
+    <string name="filter_grayscale">Grayscale</string>
+    <string name="filter_sepia">Sepia</string>
+    <string name="filter_brightness">Brightness</string>
+    <string name="filter_blur">Blur</string>
+    <string name="filter_autumn">Autumn</string>
+    <string name="filter_bone">Bone</string>
+    <string name="filter_jet">Jet</string>
+    <string name="filter_winter">Winter</string>
+    <string name="filter_rainbow">Rainbow</string>
+    <string name="filter_ocean">Ocean</string>
+    <string name="filter_summer">Summer</string>
+    <string name="filter_spring">Spring</string>
+    <string name="filter_cool">Cool</string>
+    <string name="filter_hsv">HSV</string>
+    <string name="filter_pink">Pink</string>
+    <string name="filter_hot">Hot</string>
+    <string name="filter_parula">Parula</string>
+
+    <string name="menu_save">Save</string>
 </resources>
