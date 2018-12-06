@@ -26,6 +26,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/app_name"
             tools:src="@drawable/original_p" />
+
     </FrameLayout>
 
     <LinearLayout

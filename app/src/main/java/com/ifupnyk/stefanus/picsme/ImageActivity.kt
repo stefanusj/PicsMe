@@ -126,6 +126,7 @@ class ImageActivity : AppCompatActivity() {
     }
 
     val onBrightnessClicked = View.OnClickListener {
+        seekBar.progress = 0
         seekBar.setOnSeekBarChangeListener(onSeekBarBrightnessChanged)
         frameActivate(flBrightness)
         edited = original.toMat().brightness().toBitmap()
@@ -133,6 +134,7 @@ class ImageActivity : AppCompatActivity() {
     }
 
     val onBlurClicked = View.OnClickListener {
+        seekBar.progress = 50
         seekBar.setOnSeekBarChangeListener(onSeekBarBlurChanged)
         frameActivate(flBlur)
         edited = original.toMat().toBlur().toBitmap()
@@ -262,10 +264,11 @@ class ImageActivity : AppCompatActivity() {
     }
 
     fun saveImage() {
-        if (savebitmap(edited))
+        if (savebitmap(edited)) {
             toast("Image Saved Successfully")
-        else
+        } else {
             toast("Failed to Save")
+        }
     }
 
     companion object {
