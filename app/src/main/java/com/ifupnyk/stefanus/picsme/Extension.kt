@@ -22,15 +22,15 @@ fun View.invisible() {
     this.visibility = View.GONE
 }
 
-fun Context.savebitmap(bmp: Bitmap): Boolean {
+fun Context.saveBitmap(bmp: Bitmap): File? {
 
-    val pathName = Environment.getExternalStorageDirectory().absolutePath +
-            "/${this.resources.getString(R.string.app_name)}"
+    val pathName =
+        Environment.getExternalStorageDirectory().absolutePath + "/${this.resources.getString(R.string.app_name)}"
     val myDir = File(pathName)
     myDir.mkdirs()
 
-    val dateFormat = SimpleDateFormat("yyyyMMdd_HH_mm_ss", Locale.US);
-    val currentTimeStamp = dateFormat.format(Date());
+    val dateFormat = SimpleDateFormat("yyyyMMdd_HH_mm_ss", Locale.US)
+    val currentTimeStamp = dateFormat.format(Date())
     val fileName = "IMG_$currentTimeStamp.jpg"
 
     val file = File(myDir, fileName)
@@ -45,7 +45,7 @@ fun Context.savebitmap(bmp: Bitmap): Boolean {
         fo.close()
     } catch (e: Exception) {
         e.printStackTrace()
-        return false
+        return null
     }
-    return true
+    return file
 }

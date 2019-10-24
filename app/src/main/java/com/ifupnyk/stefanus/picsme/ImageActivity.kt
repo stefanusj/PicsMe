@@ -1,8 +1,10 @@
 package com.ifupnyk.stefanus.picsme
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
@@ -16,6 +18,7 @@ import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_image.*
 import org.jetbrains.anko.toast
 import org.opencv.android.OpenCVLoader
+import java.io.File
 
 
 class ImageActivity : AppCompatActivity() {
@@ -34,7 +37,7 @@ class ImageActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val imageUri = intent.getStringExtra(ImageActivity.IMAGE_INTENT).toUri()
+        val imageUri = intent.getStringExtra(IMAGE_INTENT).toUri()
         original = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
         ivPhoto.setImageBitmap(original)
 
@@ -57,22 +60,7 @@ class ImageActivity : AppCompatActivity() {
         flHot.setOnClickListener(onHotClicked)
         flParula.setOnClickListener(onParulaClicked)
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        STORAGE_PERMISSION)
-            }
-        }
+        requestPermissions()
     }
 
     override fun onResume() {
@@ -99,7 +87,7 @@ class ImageActivity : AppCompatActivity() {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.size > 0 && grantResults.get(0) == PackageManager.PERMISSION_GRANTED) {
                 } else {
-                    toast("Permission harus diijinkan untuk melanjutkan")
+                    toast("Permission need to be granted for saving image")
                 }
                 return
             }
@@ -264,11 +252,46 @@ class ImageActivity : AppCompatActivity() {
     }
 
     fun saveImage() {
-        if (savebitmap(edited)) {
+        val file = saveBitmap(edited)
+        file?.let {
             toast("Image Saved Successfully")
-        } else {
+            sendBroadcast(it)
+        } ?: run {
             toast("Failed to Save")
         }
+    }
+
+    fun requestPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            ) {
+                toast("Permission storage need to be allowed")
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    STORAGE_PERMISSION
+                )
+            } else {
+                toast("Permission storage need to be allowed")
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    STORAGE_PERMISSION
+                )
+            }
+        }
+    }
+
+    fun sendBroadcast(file: File) {
+        val scanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        val contentUri = Uri.fromFile(file)
+        scanIntent.data = contentUri
+        sendBroadcast(scanIntent)
     }
 
     companion object {
